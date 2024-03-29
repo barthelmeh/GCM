@@ -1,5 +1,5 @@
 import cv2
-from hand_landmarks import Landmarker
+from hand import Landmarker, GestureRecognition
 from cursor import Cursor
 
 def main():
@@ -10,6 +10,7 @@ def main():
 
     landmarker = Landmarker('hand_landmarker.task')
     cursor = Cursor()
+    gesture_recogniser = GestureRecognition()
 
     while True:
         ret, frame = video_capture.read()
@@ -20,8 +21,18 @@ def main():
 
         landmark_result = landmarker.get_landmarks(image)
         if len(landmark_result.hand_landmarks) > 0:
+            landmarks = landmark_result.hand_landmarks[0]
             # Cursor position maybe not pointer but average between pointer and thumb
-            cursor.moveToFinger(landmark_result.hand_landmarks[0][8])
+            cursor_position = cursor.get_cursor_position(landmarks)
+            cursor.move_to(cursor_position)
+
+            # Get the gesture
+            gesture = gesture_recogniser.get_gesture(landmarks)
+            if gesture == 0:  # No gesture
+                continue
+
+            if gesture == 1:  # Pinching
+                print("Pinching")
 
         # annotated_image = draw_landmarks_on_image(frame, landmark_result)
         # cv2.imshow('frame', annotated_image)
