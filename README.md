@@ -1,4 +1,4 @@
-# Gesture Controlled Object Manipulation
+# Gesture Controlled Interface Manipulation
 _Written for COSC428 26/06/2024_  
 **Tom Barthelmeh**
 
